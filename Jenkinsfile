@@ -14,5 +14,19 @@ pipeline {
       }
     }
 
+    stage('Report & Publish') {
+      agent {
+        node {
+          label 'docker'
+        }
+
+      }
+      steps {
+        unstash 'build-test-artifacts'
+        junit '**/target/surefire-reports/TEST-*.xml'
+        archiveArtifacts(artifacts: 'target/*.jar', onlyIfSuccessful: true)
+      }
+    }
+
   }
 }
